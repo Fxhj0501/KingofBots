@@ -12,6 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 public class Player {
     private Integer id;
+    //约定-1为实时对战，否则导入bot代码
+    private Integer botId;
+    private String botCode;
     private Integer sx;
     private Integer sy;
     private List<Integer> steps;
