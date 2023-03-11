@@ -33,7 +33,7 @@ public class WebSocketServer {
     public static ConcurrentHashMap<Integer,WebSocketServer> users = new ConcurrentHashMap<>();
     //线程安全的选手匹配池
 
-    private static UserMapper userMapper;
+    public static UserMapper userMapper;
     public static RecordMapper recordMapper;
     private static BotMapper botMapper;
     public static RestTemplate restTemplate;

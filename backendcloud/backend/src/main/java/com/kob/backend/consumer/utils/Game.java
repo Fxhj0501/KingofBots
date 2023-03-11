@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.kob.backend.consumer.WebSocketServer;
 import com.kob.backend.pojo.Bot;
 import com.kob.backend.pojo.Record;
+import com.kob.backend.pojo.User;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -266,7 +267,25 @@ public class Game extends Thread{
         return sb.toString();
     }
 
+    private void updateUserRating(Player player,Integer rating){
+        User user = WebSocketServer.userMapper.selectById(player.getId());
+        user.setRating(rating);
+        WebSocketServer.userMapper.updateById(user);
+    }
+    //算分机制是步数越多，说明对局质量越高，因此可以少扣分，多加分
+    //为了避免刷分，10分封顶
     private void saveToDatebase(){
+        Integer ratingA = WebSocketServer.userMapper.selectById(playerA.getId()).getRating();
+        Integer ratingB = WebSocketServer.userMapper.selectById(playerB.getId()).getRating();
+        if("A".equals(loser)){
+            ratingA -= Math.max((5 - (int) Math.floor(0.1 * playerA.getStepsString().length())), 0);
+            ratingB += Math.min(5 + (int)Math.floor(0.1*playerA.getStepsString().length()),10);
+        }else if ("B".equals(loser)){
+            ratingA += Math.min(5 + (int)Math.floor(0.1*playerA.getStepsString().length()),10);;
+            ratingB -= Math.max((5 - (int) Math.floor(0.1 * playerA.getStepsString().length())), 0);
+        }
+        updateUserRating(playerA,ratingA);
+        updateUserRating(playerB,ratingB);
         Record record = new Record(
                 null,
                 playerA.getId(),
