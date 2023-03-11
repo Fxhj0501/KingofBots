@@ -24,7 +24,7 @@ public class GetRecordListServiceImpl implements GetRecordListService {
     private UserMapper userMapper;
     @Override
     public JSONObject getList(Integer page) {
-        IPage<Record> recordIPage = new Page<>(page,20);
+        IPage<Record> recordIPage = new Page<>(page,15);
         QueryWrapper<Record> queryWrapper = new QueryWrapper<>();
         //降序排序，越新的对战记录越先返回
         queryWrapper.orderByDesc("id");
